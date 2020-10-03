@@ -1,5 +1,27 @@
+$active-bg-color: #e0ffff;
 .card{
   img {
     max-width: 70px;
+  }
+}
+ul{
+  padding-inline-start: 0;
+  li{
+    background-color: transparent;
+    list-style: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    &:not(.selected):hover{
+      cursor: pointer;
+      background-color: lighten($active-bg-color, 4%);
+    }
+    &.selected{
+      background-color: $active-bg-color;
+      transition: background-color 0.7s ease-in;
+    }
+    p{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }

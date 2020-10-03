@@ -15,8 +15,14 @@
     <div class="col-6">
       <h4>messages:</h4>
       <ul>
-        <li *ngFor="let message of messages$ | async" (click)="selectMessage(message.id)">
-          <p [ngClass]="{'font-weight-bold': !message.seen}">{{ message.id }} : {{message.subject}}</p>
+        <li
+          *ngFor="let message of messages$ | async"
+          (click)="selectMessage(message.id)"
+          [ngClass]="{'selected': message.id === selectedMessage?.id}"
+        >
+          <p [ngClass]="{'font-weight-bold': !message.seen}" class="mb-0 p-1">
+            {{message.subject}}
+          </p>
         </li>
       </ul>
     </div>
