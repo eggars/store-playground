@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { MessageService } from './data/services/message.service';
 import { AppState } from './store';
 import { Store, select } from '@ngrx/store';
-import { GetMessages } from './store/messages/message.actions';
+import { GetMessages, GetMessage, MarkAsSeen } from './store/messages/message.actions';
 import { selectMessageCount, selectUnseenMessageCount, selectMessageList, selectSelectedMessage } from './store/messages/message.selector';
 import { Message } from './data/models/message.interface';
 
@@ -33,20 +33,25 @@ export class AppComponent implements OnInit, OnDestroy {
     this.unseenMessageCount$ = this.store.pipe(select(selectUnseenMessageCount));
     this.messages$ = this.store.pipe(select(selectMessageList));
     this.selectedMessage$ = this.store.pipe(select(selectSelectedMessage));
-    const subscription = this.selectedMessage$.subscribe(message => this.selectedMessage = message);
+    const subscription = this.selectedMessage$.subscribe(message => {
+      this.selectedMessage = message;
+      if (!!message && !message.seen) {
+        this.store.dispatch(new MarkAsSeen(message.id));
+      }
+    });
     this.subscriptions.push(subscription);
   }
 
-  selectMessage(message: Message): void {
-    console.log('set selected!');
+  selectMessage(messageId: string): void {
+    this.store.dispatch(new GetMessage(messageId));
   }
 
   generateMessages(): void {
     const subscription = this.messageService.messageStorage$.subscribe(res => {
-      this.doneLoading = res.doneLoading;
-      if (res.doneLoading) {
+      if (res.doneLoading && res.doneLoading !== this.doneLoading) {
         this.store.dispatch(new GetMessages());
       }
+      this.doneLoading = res.doneLoading;
     });
     this.subscriptions.push(subscription);
     this.messageService.generateMessages();

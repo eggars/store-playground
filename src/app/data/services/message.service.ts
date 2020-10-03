@@ -17,6 +17,12 @@ export class MessageService {
     return of({ messages: this.messageStorage$.value.messages } as MessageListResponse);
   }
 
+  markAsSeen(updatedList: Message[]) {
+    const currentStorege = this.messageStorage$.value;
+    currentStorege.messages = updatedList;
+    this.messageStorage$.next(currentStorege);
+  }
+
   generateMessages(): void {
     [...Array(5)].forEach((_, i) => {
       setTimeout(() => {

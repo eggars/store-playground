@@ -13,17 +13,17 @@
   </div>
   <div class="row">
     <div class="col-6">
-      <h3 class="text-center">messages:</h3>
+      <h4>messages:</h4>
       <ul>
-        <li *ngFor="let message of messages$ | async" (click)="selectMessage(message)">
+        <li *ngFor="let message of messages$ | async" (click)="selectMessage(message.id)">
           <p [ngClass]="{'font-weight-bold': !message.seen}">{{ message.id }} : {{message.subject}}</p>
         </li>
       </ul>
     </div>
     <div class="col-6">
-      <h3 class="text-center">selected message:</h3>
+      <h4>selected message:</h4>
       <div class="card" style="width: 18rem;" *ngIf="!!selectedMessage">
-        <img [src]="selectedMessage.iconSrc" class="card-img-top">
+        <img [src]="selectedMessage.iconSrc" class="card-img-top mx-auto mt-2">
         <div class="card-body">
           <h5 class="card-title">{{ selectedMessage.subject }}</h5>
           <p class="card-text">{{ selectedMessage.body }}</p>

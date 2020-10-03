@@ -6,7 +6,9 @@ export enum MessageActionsEnum {
   GetMessages = '[Message] get messages',
   GetMessagesSuccess = '[Message] get messages success',
   GetMessage = '[Message] get message',
-  GetMessageSuccess = '[Message] get message success'
+  GetMessageSuccess = '[Message] get message success',
+  MarkAsSeen = '[Message] mark as seen',
+  MarkAsSeenSuccess = '[Message] mark as seen success'
 }
 
 export class GetMessages implements Action {
@@ -28,8 +30,20 @@ export class GetMessageSuccess implements Action {
   constructor(public payload: Message) {}
 }
 
+export class MarkAsSeen implements Action {
+  public readonly type = MessageActionsEnum.MarkAsSeen;
+  constructor(public payload: string) {}
+}
+
+export class MarkAsSeenSuccess implements Action {
+  public readonly type = MessageActionsEnum.MarkAsSeenSuccess;
+  constructor(public payload: Message[]) {}
+}
+
 export type MessageActions =
   GetMessages
   | GetMessagesSuccess
   | GetMessage
-  | GetMessageSuccess;
+  | GetMessageSuccess
+  | MarkAsSeen
+  | MarkAsSeenSuccess;

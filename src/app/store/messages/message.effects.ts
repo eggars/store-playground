@@ -1,7 +1,7 @@
 import { ofType, Effect, Actions } from '@ngrx/effects';
 import { map, withLatestFrom, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { GetMessages, MessageActionsEnum, GetMessage, GetMessageSuccess, GetMessagesSuccess } from './message.actions';
+import { GetMessages, MessageActionsEnum, GetMessage, GetMessageSuccess, GetMessagesSuccess, MarkAsSeen, MarkAsSeenSuccess } from './message.actions';
 import { select, Store } from '@ngrx/store';
 import { selectMessageList } from './message.selector';
 import { AppState } from '..';
@@ -26,7 +26,21 @@ export class MessageEffects {
   getMessages$ = this.actions$.pipe(
     ofType<GetMessages>(MessageActionsEnum.GetMessages),
     switchMap(() => this.messageService.getMessages()),
-    switchMap((messageListResponse: MessageListResponse) => of(new GetMessagesSuccess(messageListResponse.messages)))
+    switchMap((messageListResponse: MessageListResponse) => {
+      return of(new GetMessagesSuccess(messageListResponse.messages));
+    })
+  );
+
+  @Effect()
+  markAsSeen$ = this.actions$.pipe(
+    ofType<MarkAsSeen>(MessageActionsEnum.MarkAsSeen),
+    map(action => action.payload),
+    withLatestFrom(this.store.pipe(select(selectMessageList))),
+    switchMap(([id, messages]) => {
+      const res = messages.map((message) => (message.id === id) ? {...message, seen : true} : message);
+      this.messageService.markAsSeen(res);
+      return of(new MarkAsSeenSuccess(res));
+    })
   );
 
   constructor(

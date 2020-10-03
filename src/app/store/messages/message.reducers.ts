@@ -19,6 +19,12 @@ export const messageReducers = (
         selectedMessage: action.payload
       };
 
+    case MessageActionsEnum.MarkAsSeenSuccess:
+      return {
+        ...state,
+        messages: action.payload
+      };
+
     default:
       return state;
   }
