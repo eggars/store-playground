@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { MessageService } from './data/services/message.service';
 import { AppState } from './store';
 import { Store, select } from '@ngrx/store';
-import { GetMessages, GetMessage, MarkAsSeen } from './store/messages/message.actions';
+import { GetMessages, GetMessage, MarkAsSeen, DeleteMessage } from './store/messages/message.actions';
 import { selectMessageCount, selectUnseenMessageCount, selectMessageList, selectSelectedMessage } from './store/messages/message.selector';
 import { Message } from './data/models/message.interface';
 
@@ -44,6 +44,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   selectMessage(messageId: string): void {
     this.store.dispatch(new GetMessage(messageId));
+  }
+
+  deleteMessage(messageId: string): void {
+    this.store.dispatch(new DeleteMessage(messageId));
   }
 
   generateMessages(): void {

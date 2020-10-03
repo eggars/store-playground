@@ -1,7 +1,10 @@
 import { ofType, Effect, Actions } from '@ngrx/effects';
 import { map, withLatestFrom, switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { GetMessages, MessageActionsEnum, GetMessage, GetMessageSuccess, GetMessagesSuccess, MarkAsSeen, MarkAsSeenSuccess } from './message.actions';
+import {
+  GetMessages, MessageActionsEnum, GetMessage, GetMessageSuccess,
+  GetMessagesSuccess, MarkAsSeen, MarkAsSeenSuccess, DeleteMessage, DeleteMessageSuccess
+} from './message.actions';
 import { select, Store } from '@ngrx/store';
 import { selectMessageList } from './message.selector';
 import { AppState } from '..';
@@ -38,8 +41,20 @@ export class MessageEffects {
     withLatestFrom(this.store.pipe(select(selectMessageList))),
     switchMap(([id, messages]) => {
       const res = messages.map((message) => (message.id === id) ? {...message, seen : true} : message);
-      this.messageService.markAsSeen(res);
+      this.messageService.updateStorage(res);
       return of(new MarkAsSeenSuccess(res));
+    })
+  );
+
+  @Effect()
+  deleteMessage$ = this.actions$.pipe(
+    ofType<DeleteMessage>(MessageActionsEnum.DeleteMessage),
+    map(action => action.payload),
+    withLatestFrom(this.store.pipe(select(selectMessageList))),
+    switchMap(([id, messages]) => {
+      const res = messages.filter((message) => message.id !== id);
+      this.messageService.updateStorage(res);
+      return of(new DeleteMessageSuccess(res));
     })
   );
 

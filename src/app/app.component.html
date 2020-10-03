@@ -27,7 +27,7 @@
         <div class="card-body">
           <h5 class="card-title">{{ selectedMessage.subject }}</h5>
           <p class="card-text">{{ selectedMessage.body }}</p>
-          <a href="#" class="btn btn-primary">Delete</a>
+          <button (click)="deleteMessage(selectedMessage.id)" class="btn btn-primary">Delete</button>
         </div>
       </div>
     </div>

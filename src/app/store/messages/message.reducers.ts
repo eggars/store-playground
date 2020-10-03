@@ -25,6 +25,12 @@ export const messageReducers = (
         messages: action.payload
       };
 
+    case MessageActionsEnum.DeleteMessageSuccess:
+      return {
+        messages: action.payload,
+        selectedMessage: undefined
+      };
+
     default:
       return state;
   }
